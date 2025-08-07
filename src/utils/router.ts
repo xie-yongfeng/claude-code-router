@@ -129,6 +129,13 @@ const getUseModel = async (req: any, tokenCount: number, config: any) => {
 export const router = async (req: any, _res: any, config: any) => {
   const { messages, system = [], tools }: MessageCreateParamsBase = req.body;
   try {
+    // 自定义系统提示词
+    if (config.SYSTEM_PROMPT){
+      messages.unshift({
+        role: 'user',
+        content: config.SYSTEM_PROMPT
+      });
+    }
     const tokenCount = calculateTokenCount(
       messages as MessageParam[],
       system,

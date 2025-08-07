@@ -6,5 +6,5 @@ services:
     ports:
       - "3456:3456"
     volumes:
-      - ~/.claude-code-router:/root/.claude-code-router
+      - ~/claude-code:/root/claude-code
     restart: unless-stopped

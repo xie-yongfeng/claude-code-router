@@ -5,6 +5,8 @@ import {
 } from "./processCheck";
 import { closeService } from "./close";
 import { readConfigFile } from ".";
+import { homedir } from "os";
+import { join } from "path";
 
 export async function executeCodeCommand(args: string[] = []) {
   // Set environment variables
@@ -30,7 +32,13 @@ export async function executeCodeCommand(args: string[] = []) {
   incrementReferenceCount();
 
   // Execute claude command
-  const claudePath = process.env.CLAUDE_PATH || "claude";
+
+  const homeDir = homedir();
+  const configPath = homeDir + "/claude-code/claude-code_cli.js";
+  const nodePath = homeDir + "/claude-code/node";
+
+  const claudePath = process.env.CLAUDE_PATH || nodePath + " " + configPath;
+  //console.log( "claudePath: "+claudePath);
   const claudeProcess = spawn(claudePath, args, {
     env,
     stdio: "inherit",
