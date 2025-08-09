@@ -9,9 +9,10 @@ import {
 } from "./utils/processCheck";
 import { version } from "../package.json";
 import { spawn, exec } from "child_process";
-import { PID_FILE, REFERENCE_COUNT_FILE } from "./constants";
+import { PID_FILE, REFERENCE_COUNT_FILE, HOME_DIR} from "./constants";
 import fs, { existsSync, readFileSync } from "fs";
 import { join } from "path";
+import { json } from "stream/consumers";
 
 const command = process.argv[2];
 
@@ -84,28 +85,17 @@ async function main() {
     case "code":
       if (!isServiceRunning()) {
         console.log("Service not running, starting service...");
-        const cliPath = join(__dirname, "cli.js");
-        const startProcess = spawn("node", [cliPath, "start"], {
+        const cliPath = join(HOME_DIR, "cli.js");
+        const nodePath = join(HOME_DIR, "node");
+        const startProcess = spawn(nodePath, [cliPath, "start"], {
           detached: true,
           stdio: "ignore",
         });
-
-        // let errorMessage = "";
-        // startProcess.stderr?.on("data", (data) => {
-        //   errorMessage += data.toString();
-        // });
 
         startProcess.on("error", (error) => {
           console.error("Failed to start service:", error.message);
           process.exit(1);
         });
-
-        // startProcess.on("close", (code) => {
-        //   if (code !== 0 && errorMessage) {
-        //     console.error("Failed to start service:", errorMessage.trim());
-        //     process.exit(1);
-        //   }
-        // });
 
         startProcess.unref();
 
@@ -151,7 +141,8 @@ async function main() {
       // Start the service again in the background
       console.log("Starting claude code router service...");
       const cliPath = join(__dirname, "cli.js");
-      const startProcess = spawn("node", [cliPath, "start"], {
+      const nodePath = await getNodeExecutablePath();
+      const startProcess = spawn(nodePath, [cliPath, "start"], {
         detached: true,
         stdio: "ignore",
       });
