@@ -57,32 +57,9 @@ export const readConfigFile = async () => {
       process.exit(1);
     }
   } catch (readError: any) {
-    if (readError.code === "ENOENT") {
-      // Config file doesn't exist, prompt user for initial setup
-      const name = await question("Enter Provider Name: ");
-      const APIKEY = await question("Enter Provider API KEY: ");
-      const baseUrl = await question("Enter Provider URL: ");
-      const model = await question("Enter MODEL Name: ");
-      const config = Object.assign({}, DEFAULT_CONFIG, {
-        Providers: [
-          {
-            name,
-            api_base_url: baseUrl,
-            api_key: APIKEY,
-            models: [model],
-          },
-        ],
-        Router: {
-          default: `${name},${model}`,
-        },
-      });
-      await writeConfigFile(config);
-      return config;
-    } else {
       console.error(`Failed to read config file at ${CONFIG_FILE}`);
       console.error("Error details:", readError.message);
       process.exit(1);
-    }
   }
 };
 

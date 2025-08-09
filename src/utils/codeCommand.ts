@@ -34,11 +34,10 @@ export async function executeCodeCommand(args: string[] = []) {
   // Execute claude command
 
   const homeDir = homedir();
-  const configPath = homeDir + "/claude-code/claude-code_cli.js";
-  const nodePath = homeDir + "/claude-code/node";
-
+  const configPath = homeDir + "\\claude-code\\claude-code_cli.js";
+  //const nodePath = homeDir + "\\claude-code\\node";
+  const nodePath = "node"
   const claudePath = process.env.CLAUDE_PATH || nodePath + " " + configPath;
-  //console.log( "claudePath: "+claudePath);
   const claudeProcess = spawn(claudePath, args, {
     env,
     stdio: "inherit",
