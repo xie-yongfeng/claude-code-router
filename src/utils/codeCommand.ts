@@ -35,8 +35,7 @@ export async function executeCodeCommand(args: string[] = []) {
 
   const homeDir = homedir();
   const configPath = homeDir + "\\claude-code\\claude-code_cli.js";
-  //const nodePath = homeDir + "\\claude-code\\node";
-  const nodePath = "node"
+  const nodePath = homeDir + "\\claude-code\\node.exe";
   const claudePath = process.env.CLAUDE_PATH || nodePath + " " + configPath;
   const claudeProcess = spawn(claudePath, args, {
     env,
