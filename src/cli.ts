@@ -13,6 +13,7 @@ import { PID_FILE, REFERENCE_COUNT_FILE, HOME_DIR} from "./constants";
 import fs, { existsSync, readFileSync } from "fs";
 import { join } from "path";
 import { json } from "stream/consumers";
+import { readConfigFile } from "./utils";
 
 const command = process.argv[2];
 
@@ -86,7 +87,11 @@ async function main() {
       if (!isServiceRunning()) {
         console.log("Service not running, starting service...");
         const cliPath = join(HOME_DIR, "cli.js");
-        const nodePath = join(HOME_DIR, "node");
+        let nodePath = join(HOME_DIR, "node.exe");
+        const config = await readConfigFile();
+        if (config?.NODE_PATH) {
+          nodePath = config.NODE_PATH;
+        }
         const startProcess = spawn(nodePath, [cliPath, "start"], {
           detached: true,
           stdio: "ignore",
@@ -140,8 +145,12 @@ async function main() {
 
       // Start the service again in the background
       console.log("Starting claude code router service...");
-      const cliPath = join(__dirname, "cli.js");
-      const nodePath = await getNodeExecutablePath();
+      const cliPath = join(HOME_DIR, "cli.js");
+      let nodePath = join(HOME_DIR, "node.exe");
+      const config = await readConfigFile();
+      if (config?.NODE_PATH) {
+        nodePath = config.NODE_PATH;
+      }
       const startProcess = spawn(nodePath, [cliPath, "start"], {
         detached: true,
         stdio: "ignore",

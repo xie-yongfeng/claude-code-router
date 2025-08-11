@@ -24,7 +24,7 @@ export const router = async (req: any, _res: any, config: any) => {
       content: [
         {
           type: 'text',
-          text: '<system-reminder>Please continue with the task according to the conversation information listed in the "messages" request field. It is forbidden to end a task after answering a declarative sentence, and the user must be questioned to end the task. If something unusual happens while using the tool, skip or ask the user. It is forbidden to answer "正在使用工具...".</system-reminder>',
+          text: '<system-reminder>Please continue with the task or Todos steps based on the conversation list information in the request field "messages". When ending a task, it is necessary to ask the user if they have any other questions or raise questions related to the task before the task can be concluded, guiding the user to proceed to the next step. If any unusual situation occurs while using the tool, please skip or ask the user. It is forbidden to answer "正在使用工具...".</system-reminder>',
           cache_control: {'type': 'ephemeral'}
         }
       ]
